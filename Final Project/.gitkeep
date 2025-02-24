@@ -1,1 +1,5 @@
 Helps in Finding Lost pets!
+To run the Lost & Found Pet Application, ensure Node.js is installed and MongoDB is running locally. 
+First, navigate to the backend directory in the terminal, install the dependencies using npm install, and start the server -
+with npm start. The backend will operate on http://localhost:5000. Next, navigate to the frontend directory and open the index.html file in a browser to launch the frontend. 
+The application interface allows adding, viewing, updating, and deleting pet information.
