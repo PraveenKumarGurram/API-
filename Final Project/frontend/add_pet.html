@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Pet</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="add_pet.html">Add Pet</a>
+    <a href="view_pets.html">View Pets</a>
+  </nav>
+
+  <h1>Add a Pet</h1>
+  <form id="petForm">
+    <input type="text" id="name" placeholder="Pet Name" required />
+    <input type="text" id="type" placeholder="Pet Type" required />
+    <input type="text" id="status" placeholder="Status (lost/found)" required />
+    <textarea id="description" placeholder="Description" rows="4"></textarea>
+    <button type="submit">Add Pet</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('petForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pet = {
+        name: document.getElementById('name').value,
+        type: document.getElementById('type').value,
+        status: document.getElementById('status').value,
+        description: document.getElementById('description').value
+      };
+      await fetch('http://localhost:5000/api/pets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pet)
+      });
+      alert('Pet added successfully!');
+      form.reset();
+    });
+  </script>
+</body>
+</html>

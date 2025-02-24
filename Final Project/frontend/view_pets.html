@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Pets</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="add_pet.html">Add Pet</a>
+    <a href="view_pets.html">View Pets</a>
+  </nav>
+
+  <h1>View & Manage Pets</h1>
+  <div id="pets"></div>
+
+  <script>
+    const petsDiv = document.getElementById('pets');
+
+    const fetchPets = async () => {
+      const response = await fetch('http://localhost:5000/api/pets');
+      const pets = await response.json();
+      petsDiv.innerHTML = '';
+      pets.forEach(pet => {
+        const div = document.createElement('div');
+        div.className = 'pet';
+        div.innerHTML = `
+          <strong>${pet.name}</strong> (${pet.type}) - <em>${pet.status}</em><br>${pet.description}<br><br>
+          <button onclick="deletePet('${pet._id}')">Delete</button>
+          <button onclick="showUpdateForm('${pet._id}', '${pet.name}', '${pet.type}', '${pet.status}', '${pet.description}')">Update</button>
+          <div id="updateForm-${pet._id}" style="display:none; margin-top:10px;">
+            <input type="text" id="name-${pet._id}" value="${pet.name}" placeholder="Name" />
+            <input type="text" id="type-${pet._id}" value="${pet.type}" placeholder="Type" />
+            <input type="text" id="status-${pet._id}" value="${pet.status}" placeholder="Status" />
+            <textarea id="description-${pet._id}" rows="3">${pet.description}</textarea>
+            <button onclick="updatePet('${pet._id}')">Submit Update</button>
+          </div>
+        `;
+        petsDiv.appendChild(div);
+      });
+    };
+
+    const deletePet = async (id) => {
+      await fetch(`http://localhost:5000/api/pets/${id}`, { method: 'DELETE' });
+      fetchPets();
+    };
+
+    const showUpdateForm = (id) => {
+      document.getElementById(`updateForm-${id}`).style.display = 'block';
+    };
+
+    const updatePet = async (id) => {
+      const updatedPet = {
+        name: document.getElementById(`name-${id}`).value,
+        type: document.getElementById(`type-${id}`).value,
+        status: document.getElementById(`status-${id}`).value,
+        description: document.getElementById(`description-${id}`).value,
+      };
+      await fetch(`http://localhost:5000/api/pets/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedPet)
+      });
+      fetchPets();
+    };
+
+    fetchPets();
+  </script>
+</body>
+</html>
